@@ -14,6 +14,7 @@ public class Event {
 	private String when;
 	private String name;
 	private int idOfTestingBeer;
+	private int posOfTestingBeer;
 	private int idOfTester;
 	private String nameOfTester;
 	/** state:
@@ -34,9 +35,22 @@ public class Event {
 		this.name = name;
 		this.where = where;
 		this.when = when;
+	
 	}
 	
 	
+
+	public int getPosOfTestingBeer() {
+		return posOfTestingBeer;
+	}
+
+
+
+	public void setPosOfTestingBeer(int posOfTestingBeer) {
+		this.posOfTestingBeer = posOfTestingBeer;
+	}
+
+
 
 	public int getIdOfTester() {
 		return idOfTester;
@@ -141,7 +155,7 @@ public class Event {
 		try {
 			for(int i=0;i<jArray.length();i++){
 				json_data = jArray.getJSONObject(i);
-				testers.add(new Tester(json_data.getString("name")));
+				testers.add(new Tester(json_data.getInt("id"),json_data.getString("name")));
 			}
 		
 		} catch (JSONException e) {
@@ -166,7 +180,8 @@ public class Event {
 				json_data = jArray.getJSONObject(i);
 				if (i==0){
 					state = json_data.getInt("state");
-					if (state == 2){
+					posOfTestingBeer =json_data.getInt("posOfTestingBeer");
+					if (state == 2){						
 						idOfTestingBeer = json_data.getInt("idOfTestingBeer");
 						idOfTester = json_data.getInt("idOfTester");
 						nameOfTester = json_data.getString("nameOfTester");
@@ -178,6 +193,16 @@ public class Event {
 		
 		} catch (JSONException e) {
 			throw new MistakeInJSONException("loadTurn: Chyba pri parsovani", e);
+		}
+		
+		try {
+			loadTesters();
+		} catch (ConnectivityExeption e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MistakeInJSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 	}
@@ -193,14 +218,24 @@ public class Event {
 		}
 		return result;
 	}
+	
+	public CharSequence[] getTestersNames() {
+		CharSequence[] result = new String[testers.size()];
+		int i = 0;
+		for (Tester tester: testers){
+			result[i] = tester.getName();
+			i++;
+		}
+		return result;
+	}
 
 
 
-	public void saveVote(int choosenBeer, int mark, String comment) throws ConnectivityExeption, MistakeInJSONException{
+	public void saveVote(int chosenTester,int choosenBeer, int mark, String comment) throws ConnectivityExeption, MistakeInJSONException{
 		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 		nameValuePairs.add(new BasicNameValuePair("idOfEvent", String.valueOf(id)));
 		nameValuePairs.add(new BasicNameValuePair("idOfTestingBeer", String.valueOf(idOfTestingBeer)));
-		nameValuePairs.add(new BasicNameValuePair("idOfTester", String.valueOf(idOfTester)));
+		nameValuePairs.add(new BasicNameValuePair("idOfTester", String.valueOf(chosenTester)));
 		nameValuePairs.add(new BasicNameValuePair("choosenBeer", String.valueOf(choosenBeer)));
 		nameValuePairs.add(new BasicNameValuePair("mark", String.valueOf(mark)));
 		nameValuePairs.add(new BasicNameValuePair("comment", comment));

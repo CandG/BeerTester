@@ -11,94 +11,99 @@
 
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" 
-            android:orientation="vertical">
-        
+            android:layout_height="471dp"
+            android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/jmeno"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:text="Jméno testera"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#3380D3"
-        android:textSize="28sp" />
+            <TextView
+                android:id="@+id/jmeno"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:text="Jméno testera"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#3380D3"
+                android:textSize="28sp" />
 
-    <TextView
-        android:id="@+id/beer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
-        android:text="Pivo dosud nezvoleno"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+            <Button
+                android:id="@+id/chooseTester"
+                android:layout_width="196dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Zvolit testera" />
 
-    <Button
-        android:id="@+id/choose"
-        android:layout_width="196dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="Zvolit pivo" />
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="30dp" >
+            <TextView
+                android:id="@+id/beer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:text="Pivo dosud nezvoleno"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:text="Hodnocení: "
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            <Button
+                android:id="@+id/choose"
+                android:layout_width="196dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Zvolit pivo" />
 
-        <TextView
-            android:id="@+id/mark"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp" >
 
-    <SeekBar
-        android:id="@+id/seekBar1"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:max="100" />
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp"
-        android:text="Komentář:" />
-
-    <EditText
-        android:id="@+id/comment"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:gravity="top"
-        android:singleLine="false" android:lines="3"
-         >
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="Hodnocení: "
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    </EditText>
-
-    <Button
-        android:id="@+id/send"
-        android:layout_width="216dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="Hlasovat!" />
-</LinearLayout>
+                <TextView
+                    android:id="@+id/mark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
 
+            <SeekBar
+                android:id="@+id/seekBar1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:max="100" />
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:text="Komentář:" />
+
+            <EditText
+                android:id="@+id/comment"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:gravity="top"
+                android:lines="3"
+                android:singleLine="false" >
+            </EditText>
+
+            <Button
+                android:id="@+id/send"
+                android:layout_width="216dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Hlasovat!" />
+        </LinearLayout>
     </ScrollView>
+
 </LinearLayout>

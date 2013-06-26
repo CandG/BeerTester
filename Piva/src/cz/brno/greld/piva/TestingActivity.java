@@ -22,7 +22,8 @@ import android.widget.Toast;
 public class TestingActivity extends Activity {
 	
 	private Event event;
-    private int choosenBeer;
+	private int choosenBeer;
+	private int choosenTester;
     private int mark;
     private String comment;
 	private MyApplication app;
@@ -104,7 +105,7 @@ public class TestingActivity extends Activity {
         	try {
         		
         		if (choosenBeer != 0 && event.getState()==2){
-        			event.saveVote(choosenBeer, mark, comment);
+        			event.saveVote(choosenTester,choosenBeer, mark, comment);
         			choosenBeer = 0;
         			mark = 0;
         		}
@@ -134,103 +135,165 @@ public class TestingActivity extends Activity {
      * @return nothing
      */
     private void showVoting(){
-    	switch (event.getState()){
-    	case 1: setContentView(R.layout.loop); 
-    			
-		    	final CharSequence[] items = event.getBeersNames();
-		
-				Button beersButton = (Button) findViewById(R.id.choose);
-				beersButton.setOnClickListener(new OnClickListener() {
-					public void onClick(View v) {
-						AlertDialog.Builder builder = new AlertDialog.Builder(TestingActivity.this);
-		    			builder.setTitle("Zvol znaèku piva");
-		    			builder.setItems(items, new DialogInterface.OnClickListener() {
-		
-							public void onClick(DialogInterface dialog, int item) {
-		    			        choosenBeer = event.getBeers().get(item).getId();
-								TextView textView2 = (TextView) findViewById(R.id.beer);
-								textView2.setText(event.getBeers().get(item).getName());
-		    			    }
+    	if (event.getState()==3){
+       	 	setContentView(R.layout.end);
+    	}
+       	else {
+	    	setContentView(R.layout.next_vote); 
+	    	TextView textViewX = (TextView) findViewById(R.id.textView2);
+			textViewX.setText(event.getPosOfTestingBeer() + ". pivo");
+	    	
+	    	
+			Button sendButtonHodnot = (Button) findViewById(R.id.hodnot);
+			sendButtonHodnot.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					try {
+						event.loadTurn();
+					} catch (ConnectivityExeption e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (MistakeInJSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					if (event.getState() != 2)
+						Toast.makeText(getApplicationContext(), "Toto pivo je již odhlasovane!", Toast.LENGTH_SHORT).show();
+					else {
+						setContentView(R.layout.vote); 
+	
+		    			
+		    			SeekBar seekBar = (SeekBar) findViewById(R.id.seekBar1);
+		    			seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+							
+							public void onProgressChanged(SeekBar seekBar, int progress,
+									boolean fromUser) {
+								TextView textView2 = (TextView) findViewById(R.id.mark);
+								textView2.setText(String.valueOf(progress));
+								mark = progress;
+							}
+	
+							public void onStartTrackingTouch(SeekBar seekBar) {
+								// TODO Auto-generated method stub
+								
+							}
+	
+							public void onStopTrackingTouch(SeekBar seekBar) {
+								// TODO Auto-generated method stub
+								
+							}
+						});
+		    			
+		    			
+		    			final CharSequence[] items3 = event.getTestersNames();
+		   		   			
+		    			Button testersButton2 = (Button) findViewById(R.id.chooseTester);
+		    			testersButton2.setOnClickListener(new OnClickListener() {
+		    				public void onClick(View v) {
+		    					AlertDialog.Builder builder = new AlertDialog.Builder(TestingActivity.this);
+		    	    			builder.setTitle("Zvol testera");
+		    	    			builder.setItems(items3, new DialogInterface.OnClickListener() {
+	
+									public void onClick(DialogInterface dialog, int item) {
+		    	    			        choosenTester = event.getTesters().get(item).getId();
+		    	    			        TextView textView = (TextView) findViewById(R.id.jmeno);
+		    	    	    			textView.setText(event.getTesters().get(item).getName());
+		    	    			    }
+		    	    			});
+		    	    			builder.show();
+		    				}
 		    			});
-		    			builder.show();
+		    			
+		    			final CharSequence[] items2 = event.getBeersNames();
+	
+		    			Button beersButton2 = (Button) findViewById(R.id.choose);
+		    			beersButton2.setOnClickListener(new OnClickListener() {
+		    				public void onClick(View v) {
+		    					AlertDialog.Builder builder = new AlertDialog.Builder(TestingActivity.this);
+		    	    			builder.setTitle("Zvol znaèku piva");
+		    	    			builder.setItems(items2, new DialogInterface.OnClickListener() {
+	
+									public void onClick(DialogInterface dialog, int item) {
+		    	    			        choosenBeer = event.getBeers().get(item).getId();
+		    							TextView textView2 = (TextView) findViewById(R.id.beer);
+		    							textView2.setText(event.getBeers().get(item).getName());
+		    	    			    }
+		    	    			});
+		    	    			builder.show();
+		    				}
+		    			});
+		    			
+		    			Button sendButton2 = (Button) findViewById(R.id.send);
+		    			sendButton2.setOnClickListener(new OnClickListener() {
+		    				public void onClick(View v) {
+		    					if (choosenBeer == 0)
+		    						Toast.makeText(getApplicationContext(), "Nevybral jsi znaèku piva!", Toast.LENGTH_SHORT).show();
+		    					else if (choosenTester == 0)
+		    						Toast.makeText(getApplicationContext(), "Nevybral jsi testovaèe!", Toast.LENGTH_SHORT).show();
+		    					else {
+		    						EditText editText = (EditText) findViewById(R.id.comment);
+		    						comment = editText.getText().toString();
+		    						setContentView(R.layout.loading);
+		    						loadingHandler.sendEmptyMessage(STARTTURN_MSG);
+		    					}
+		    				}
+		    			});
+		    			
 					}
-				});
+				}
+			});
+			Button sendButtonNalevac = (Button) findViewById(R.id.nalevac);
+			sendButtonNalevac.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					try {
+						event.loadTurn();
+					} catch (ConnectivityExeption e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (MistakeInJSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					if (event.getState() != 1)
+						Toast.makeText(getApplicationContext(), "Poèkej až všeci odhlasuju!", Toast.LENGTH_SHORT).show();
+					else {
+						setContentView(R.layout.loop); 
+		    			
+				    	final CharSequence[] items = event.getBeersNames();
 				
-				Button sendButton = (Button) findViewById(R.id.send);
-				sendButton.setOnClickListener(new OnClickListener() {
-					public void onClick(View v) {
-						if (choosenBeer == 0)
-							Toast.makeText(getApplicationContext(), "Nevybral jsi znaèku piva!", Toast.LENGTH_SHORT).show();
-						else {
-							setContentView(R.layout.loading);
-							loadingHandler.sendEmptyMessage(STARTTURN_MSG);
-						}
-					}
-				});
-    	
-				break;
-    	case 2: setContentView(R.layout.vote); 
-    			TextView textView = (TextView) findViewById(R.id.jmeno);
-    			textView.setText(event.getNameOfTester());
-    			
-    			SeekBar seekBar = (SeekBar) findViewById(R.id.seekBar1);
-    			seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-					
-					public void onProgressChanged(SeekBar seekBar, int progress,
-							boolean fromUser) {
-						TextView textView2 = (TextView) findViewById(R.id.mark);
-						textView2.setText(String.valueOf(progress));
-						mark = progress;
-					}
-
-					public void onStartTrackingTouch(SeekBar seekBar) {
-						// TODO Auto-generated method stub
+						Button beersButton = (Button) findViewById(R.id.choose);
+						beersButton.setOnClickListener(new OnClickListener() {
+							public void onClick(View v) {
+								AlertDialog.Builder builder = new AlertDialog.Builder(TestingActivity.this);
+				    			builder.setTitle("Zvol znaèku piva");
+				    			builder.setItems(items, new DialogInterface.OnClickListener() {
+				
+									public void onClick(DialogInterface dialog, int item) {
+				    			        choosenBeer = event.getBeers().get(item).getId();
+										TextView textView2 = (TextView) findViewById(R.id.beer);
+										textView2.setText(event.getBeers().get(item).getName());
+				    			    }
+				    			});
+				    			builder.show();
+							}
+						});
 						
+						Button sendButton = (Button) findViewById(R.id.send);
+						sendButton.setOnClickListener(new OnClickListener() {
+							public void onClick(View v) {
+								if (choosenBeer == 0)
+									Toast.makeText(getApplicationContext(), "Nevybral jsi znaèku piva!", Toast.LENGTH_SHORT).show();
+								else {
+									setContentView(R.layout.loading);
+									loadingHandler.sendEmptyMessage(STARTTURN_MSG);
+								}
+							}
+						});
 					}
-
-					public void onStopTrackingTouch(SeekBar seekBar) {
-						// TODO Auto-generated method stub
-						
-					}
-				});
-    			
-    			final CharSequence[] items2 = event.getBeersNames();
-
-    			Button beersButton2 = (Button) findViewById(R.id.choose);
-    			beersButton2.setOnClickListener(new OnClickListener() {
-    				public void onClick(View v) {
-    					AlertDialog.Builder builder = new AlertDialog.Builder(TestingActivity.this);
-    	    			builder.setTitle("Zvol znaèku piva");
-    	    			builder.setItems(items2, new DialogInterface.OnClickListener() {
-
-							public void onClick(DialogInterface dialog, int item) {
-    	    			        choosenBeer = event.getBeers().get(item).getId();
-    							TextView textView2 = (TextView) findViewById(R.id.beer);
-    							textView2.setText(event.getBeers().get(item).getName());
-    	    			    }
-    	    			});
-    	    			builder.show();
-    				}
-    			});
-    			
-    			Button sendButton2 = (Button) findViewById(R.id.send);
-    			sendButton2.setOnClickListener(new OnClickListener() {
-    				public void onClick(View v) {
-    					if (choosenBeer == 0)
-    						Toast.makeText(getApplicationContext(), "Nevybral jsi znaèku piva!", Toast.LENGTH_SHORT).show();
-    					else {
-    						EditText editText = (EditText) findViewById(R.id.comment);
-    						comment = editText.getText().toString();
-    						setContentView(R.layout.loading);
-    						loadingHandler.sendEmptyMessage(STARTTURN_MSG);
-    					}
-    				}
-    			});
-    			
-    			
-				break;
-    	case 3: setContentView(R.layout.end);  
-    			break;
+				}
+			});
+			
+	
+       	 
     	}
     }
 }
